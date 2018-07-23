@@ -28,6 +28,10 @@ def source_finder(aString):
             return aString[alen-i+1:]
 source_finder("PRICE:345.324:SOURCE--QUANDL")
 
+def source_finder_short(s):
+    return s.split("--")[-1]
+source_finder_short("PRICE:345.324:SOURCE--QUANDL")
+
 def price_finder(aString):
     alen = len(aString)
     find = False
@@ -41,6 +45,13 @@ price_finder("What is the price?")
 price_finder("The price is 300")
 price_finder("Today is Monday")
 
+def price_finder_short(s):
+    return "price" in s.lower()
+price_finder_short("PRICE:345.324:SOURCE--QUANDL")
+price_finder_short("What is the price?")
+price_finder_short("The price is 300")
+price_finder_short("Today is Monday")
+
 def avg_price(price_list):
     sum_price = 0
     for price in stock_price:
@@ -49,3 +60,15 @@ def avg_price(price_list):
     return sum_price/stock_numbers
 stock_price = [100,101,102]
 avg_price(stock_price)
+
+def avg_price_short(list):
+    return sum(list)/len(list)
+avg_price_short(stock_price)
+
+def count_word(sentence,key):
+    count = 0
+    for word in sentence.split():
+        if key.lower() in word.lower():
+            count += 1
+    return count
+count_word("Gou is a dog, but dog is not the Gou.","IS")
