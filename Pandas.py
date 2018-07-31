@@ -1,6 +1,10 @@
 import numpy as np
 import pandas as pd
 
+from os import chdir, getcwd
+chdir('/Users/user/Downloads/python-for-finance-and-trading-algorithms/python-for-finance')
+getcwd()
+
 # Series has axis labels, can be indexed by a label, can hold Python objects
 labels = ['a','b','c']
 my_list = [10,20,30]
@@ -267,10 +271,7 @@ df = pd.DataFrame(
 df
 df.pivot_table(values='D',index=['A','B'],columns=['C'])
 
-from os import chdir, getcwd
-chdir('/Users/user/Downloads/python-for-finance-and-trading-algorithms/python-for-finance')
-getcwd()
-
+# data input and output
 df.to_csv('example.csv',index=False)
 pd.read_csv('example.csv')
 
@@ -280,4 +281,45 @@ pd.read_excel('Excel_sample.xlsx')
 df = pd.read_html('https://www.state.nj.us/dobi/bankwebinfo.htm')
 df[0]
 df[1][0].iloc[1:6]
+
+# Exercise
+# read in the banklist.csv file into a dataframe
+df = pd.read_csv('banklist.csv')
+# Show the head of the dataframe, columns
+df.head()
+df.columns
+# How many States (ST) are represented in this data set?
+df['ST'].nunique()
+df['ST'].unique()
+# the top 5 states with the most failed banks
+df.groupby('ST').count().sort_values('City',ascending=False)['City'].head(5)
+df['ST'].value_counts().head(5)
+# What are the top 5 acquiring institutions?
+df['Acquiring Institution'].value_counts().iloc[:5]
+# banks has the State Bank of Texas acquired, actually in Texas?
+df[df['Acquiring Institution']=='State Bank of Texas']
+df[(df['Acquiring Institution']=='State Bank of Texas')&(df['ST']=='TX')]
+# What is the most common city in California for a bank to fail in?
+df[df['ST']=='CA']
+df[df['ST']=='CA'].groupby('City').count()
+df[df['ST']=='CA'].groupby('City').count().sort_values('Bank Name',ascending=False)
+df[df['ST']=='CA'].groupby('City').count().sort_values('Bank Name',ascending=False).head(1)
+df[df['ST']=='CA'].groupby('City').count().sort_values('Bank Name',ascending=False).head(1)['Bank Name']
+# How many failed banks don't have the word "Bank" in their name?
+df['Bank Name'].apply(lambda name: 'Bank' not in name)
+df['Bank Name'].apply(lambda name: 'Bank' not in name).value_counts()
+sum(df['Bank Name'].apply(lambda name: 'Bank' not in name))
+# How many bank names start with the letter 's' ?
+sum(df['Bank Name'].apply(lambda name: name[0].upper() =='S'))
+# How many CERT values are above 20000 ?
+sum(df['CERT']>20000)
+# How many bank names consist of just two words? (e.g. "First Bank" , "Bank Georgia" )
+sum(df['Bank Name'].apply(lambda name: len(name.split())==2))
+# How many banks closed in the year 2008?
+sum(df['Closing Date'].apply(lambda date: date[-2:]) == '08')
+pd.to_datetime(df['Closing Date'])
+sum(pd.to_datetime(df['Closing Date']).apply(lambda date: date.year) == 2008)
+
+
+
 
